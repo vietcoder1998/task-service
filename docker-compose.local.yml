@@ -1,79 +1,21 @@
 services:
-  db:
-    image: mysql:8.0
-    restart: always
-    environment:
-      MYSQL_USER: devuser
-      MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: calendar_todo
-      MYSQL_PASSWORD: root_password
-      MYSQL_ALLOW_EMPTY_PASSWORD: false
-      MYSQL_RANDOM_ROOT_PASSWORD: false
-      TZ: Asia/Ho_Chi_Minh
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+  task-api:
+    build: .
+    container_name: vtec_task_api_local
     ports:
-      - "33060:3306"
-    volumes:
-      - db_data:/var/lib/mysql
-      - ./mysql-init:/docker-entrypoint-initdb.d
-    networks:
-      - calendar_net
-  rabbitmq:
-    image: rabbitmq:3-management
-    restart: always
-    ports:
-      - "5672:5672"   # RabbitMQ main port
-      - "15672:15672" # RabbitMQ management UI
+      - "3050:3050"
+    restart: unless-stopped
     environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest_password
+      - NODE_ENV=development
+      - DATABASE_URL=mysql://devuser:root_password@mysql:3306/calendar_todo
     volumes:
-      - rabbitmq_data:/var/lib/rabbitmq
+      - ./src:/app/src
+      - ./public:/app/public
+      - ./dist:/app/dist
+      - ./node_modules:/app/node_modules
     networks:
-      - calendar_net
-  redis:
-    image: redis:7.2
-    restart: always
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    networks:
-      - calendar_net
-  nocobase:
-    image: nocobase/nocobase:latest
-    restart: always
-    environment:
-      DB_DIALECT: mysql
-      DB_HOST: db
-      DB_PORT: 3306
-      DB_DATABASE: calendar_todo
-      DB_USER: devuser
-      DB_PASSWORD: root_password
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      APP_ENV: production
-      APP_PORT: 13030
-      APP_HOST: 0.0.0.0
-      INIT_ROOT_EMAIL: admin@nocobase.com
-      INIT_ROOT_PASSWORD: admin123
-      INIT_ROOT_NICKNAME: Admin
-      TZ: Asia/Ho_Chi_Minh
-      CORS_ORIGIN: "http://localhost:5174"
-      CORS_CREDENTIALS: true
+      - infra-service_local_network
 
-    ports:
-      - "13030:13030"
-      - "13000:13000"
-    depends_on:
-      - db
-      - redis
-    networks:
-      - calendar_net
-volumes:
-  db_data:
-  rabbitmq_data:
-  redis_data:
 networks:
-  calendar_net:
-    driver: bridge
+  infra-service_local_network:
+    external: true
