@@ -39,7 +39,7 @@ const httpServer = createServer(app);
 setupSocket(httpServer);
 
 // Mount v1 API routes
-app.use('/api', taskServiceApp.v1Router);
+app.use('/api/v1', taskServiceApp.v1Router);
 
 app.get('/', (req: Request, res: Response) => {
   res.status(200).json({ message: 'server is running' });
