@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
-import logger from '../logger';
+import logger from '../../logger';
 import { History, Project } from '@/types';
 import { createAsset } from '../services/asset.util';
 import * as permissionService from '../services/permission.service';

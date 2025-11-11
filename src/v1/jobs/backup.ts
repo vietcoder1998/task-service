@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { prisma } from '../prisma';
+import { prisma } from '../../prisma';
 
 export async function backupData(name: string, data: any, timeoutMs = 1000): Promise<string> {
   return new Promise((resolve, reject) => {

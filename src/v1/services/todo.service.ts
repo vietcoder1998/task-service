@@ -1,7 +1,7 @@
 import type { Todo } from '@/types';
 import { PrismaClient } from '@prisma/client';
-import logger from '../logger';
-import { publishTodoEvent } from '../queue';
+import logger from '../../logger';
+import { publishTodoEvent } from '../../queue';
 
 const prisma = new PrismaClient();
 

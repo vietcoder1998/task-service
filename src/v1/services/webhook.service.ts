@@ -1,5 +1,5 @@
 const { v4: uuidv4 } = require('uuid');
-import { Webhook as WebhookType } from '../types';
+import { Webhook as WebhookType } from '../../types';
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 

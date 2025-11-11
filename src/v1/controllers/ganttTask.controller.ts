@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import * as ganttTaskService from '../services/ganttTask.service';
-import logger from '../logger';
+import logger from '../../logger';
 
 export const getGanttTaskById = async (req: Request, res: Response) => {
   try {

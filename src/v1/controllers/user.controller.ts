@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import * as userService from '../services/user.service';
-import logger from '../logger';
+import logger from '../../logger';
 
 export const getUsersByProjectId = async (req: Request, res: Response): Promise<void> => {
   try {

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import logger from '../logger';
-import redisClient from '../utils/redisClient';
+import logger from '../../logger';
+import redisClient from '../../utils/redisClient';
 
 // Extend Express Request to allow meta property
 declare module 'express-serve-static-core' {

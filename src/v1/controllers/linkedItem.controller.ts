@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import logger from '../logger';
+import logger from '../../logger';
 import * as linkedItemService from '../services/linkedItem.service';
 
 export const getLinkedItems = async (req: Request, res: Response) => {

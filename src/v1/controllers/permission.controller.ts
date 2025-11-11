@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import logger from '../logger';
+import logger from '../../logger';
 import * as permissionService from '../services/permission.service';
 
 export const getPermissions = async (req: Request, res: Response) => {

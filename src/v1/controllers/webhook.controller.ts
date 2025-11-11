@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import * as webhookService from '../services/webhook.service';
-import logger from '../logger';
+import logger from '../../logger';
 
 export const getWebhooks = async (req: Request, res: Response) => {
   try {

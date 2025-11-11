@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { randomUUID } from 'crypto';
-import { GanttTask as GanttTaskType } from '../types';
+import { GanttTask as GanttTaskType } from '../../types';
 const prisma = new PrismaClient();
 
 const fromPrismaGanttTask = (prismaTask: GanttTaskType): GanttTaskType => ({

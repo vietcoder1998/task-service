@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import type { Prisma } from '@prisma/client';
-import type { Notification } from '../types';
+import type { Notification } from '../../types';
 
 const prisma = new PrismaClient();
 

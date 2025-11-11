@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import * as locationService from '../services/location.service';
-import logger from '../logger';
+import logger from '../../logger';
 
 // GET /projects/:id/locations
 export async function getLocations(req: Request, res: Response, next: NextFunction) {

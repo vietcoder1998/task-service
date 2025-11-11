@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 
 // Removed custom FileUploadRequest interface, use standard Request type
 import * as fileService from '../services/file.service';
-import logger from '../logger';
+import logger from '../../logger';
 
 export const getFiles = async (req: Request, res: Response) => {
   try {

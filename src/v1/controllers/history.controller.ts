@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import * as historyService from '../services/history.service';
-import logger from '../logger';
+import logger from '../../logger';
 
 export const getHistories = async (req: Request, res: Response) => {
   try {

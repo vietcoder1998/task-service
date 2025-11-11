@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import logger from '../logger';
+import logger from '../../logger';
 import * as projectService from '../services/project.service';
 import * as todoService from '../services/todo.service';
-import { Todo } from '../types/index';
+import { Todo } from '../../types/index';
 
 export const getTodos = async (req: Request, res: Response) => {
   try {

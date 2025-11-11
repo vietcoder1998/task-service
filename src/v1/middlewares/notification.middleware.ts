@@ -1,8 +1,8 @@
-import { publishNotificationEvent } from '../queue';
+import { publishNotificationEvent } from '../../queue';
 import { generateNotificationFromTemplate } from '../services/notificationTemplate.service';
 import { PrismaClient } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
-import { NotificationResourceType } from '../enum';
+import { NotificationResourceType } from '../../enum';
 const prisma = new PrismaClient();
 
 /**

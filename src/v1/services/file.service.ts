@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import fs from 'fs/promises';
 import path from 'path';
-import { FileItem as FileItemType } from '../types';
+import { FileItem as FileItemType } from '../../types';
 const prisma = new PrismaClient();
 
 const fromPrismaFile = (prismaFile: any): FileItemType => ({

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import logger from '../logger';
+import logger from '../../logger';
 import * as fileService from '../services/file.service';
 import * as historyService from '../services/history.service';
 import * as linkedItemService from '../services/linkedItem.service';

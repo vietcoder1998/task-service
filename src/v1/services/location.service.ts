@@ -1,4 +1,4 @@
-import { Location } from '../types';
+import { Location } from '../../types';
 import { PrismaClient } from '@prisma/client';
 import { createAsset } from './asset.util';
 
