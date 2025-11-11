@@ -9,6 +9,7 @@ export const MYSQL_CONFIG = {
 };
 
 export const RABBITMQ_URL = process.env.RABBITMQ_URL || 'amqp://localhost';
+export const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
 export const QUEUE_NAME = {
   Notification: process.env.RABBITMQ_QUEUE_NOTIFICATION || 'notification-events',
   Todo: process.env.RABBITMQ_QUEUE_TODO || 'todo-events',
