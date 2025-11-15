@@ -1,11 +1,14 @@
+
 generator client {
   provider = "prisma-client-js"
 }
+
 
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
 
 model User {
   id           String         @id @default(uuid())
@@ -15,9 +18,9 @@ model User {
   projectId    String?
   project      Project?       @relation(fields: [projectId], references: [id])
   permissions  Permission[]   @relation("UserPermissions")
-  roleId       String? // <-- Add this line
-  role         Role?          @relation(fields: [roleId], references: [id]) // <-- Add this line
-  status       Int            @default(1) // delete: -2, remove: -1, inactive: 0, active: 1
+  roleId       String?
+  role         Role?          @relation(fields: [roleId], references: [id])
+  status       Int            @default(1)
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   AssignedUser AssignedUser[]
@@ -238,14 +241,14 @@ model Project {
   webhooks              Webhook[]
   users                 User[]
   locations             Location[]
-  roles                 Role[] // <--- Add this line
-  notifications         Notification[] // <--- Add this line
-  notificationTemplates NotificationTemplate[] // <-- Add this line for 1:N
-  status                Int                    @default(1) // delete: -2, remove: -1, inactive: 0, active: 1
+  roles                 Role[]
+  notifications         Notification[]
+  notificationTemplates NotificationTemplate[]
+  status                Int                    @default(1)
   histories             History[]
   labels                Label[]
   reports               Report[]
-  jobs                  Job[] // 1:n relation to Job
+  jobs                  Job[]
 
   @@map("project")
 }
@@ -403,6 +406,7 @@ model Report {
   id        String      @id @default(uuid())
   title     String
   content   String?
+  imageUrl  String?     // Use imageUrl if needed
   projectId String
   project   Project     @relation(fields: [projectId], references: [id])
   todos     Todo[]
