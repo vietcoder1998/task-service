@@ -9,7 +9,7 @@
     "outDir": "./dist",
     "baseUrl": ".",
     "paths": {
-      "@shared/*": ["../shared/src/*"],
+      "@shared/*": ["../shared/*"],
       "@/*": ["src/*"],
       "@/controllers/*": ["src/v1/controllers/*"],
       "@/middlewares/*": ["src/v1/middlewares/*"],
@@ -17,6 +17,6 @@
       "@/utils/*": ["src/utils/*"]
     }
   },
-  "include": ["src/**/*.ts", "prisma/*.ts", "../shared/src/**/*.ts"],
+  "include": ["src/**/*.ts", "prisma/*.ts", "../shared/**/*.ts"],
   "exclude": ["node_modules", "**/*.spec.ts", "prisma/migrations/*"]
 }
