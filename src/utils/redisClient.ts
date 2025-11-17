@@ -1,7 +1,7 @@
 import { createClient } from 'redis';
-import { REDIS_URL } from '../env';
+import { config } from '../config/env.config';
 
-const redisClient = createClient({ url: REDIS_URL });
+const redisClient = createClient({ url: config.database.redis.url });
 
 redisClient.on('error', (err) => {
   console.error('Redis Client Error', err);
@@ -17,7 +17,7 @@ redisClient.on('ready', () => {
 
 redisClient.connect().catch((err) => {
   console.error('Failed to connect to Redis:', err);
-  console.error('REDIS_URL:', REDIS_URL);
+  console.error('REDIS_URL:', config.database.redis.url);
 });
 
 export default redisClient;

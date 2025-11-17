@@ -1,11 +1,12 @@
 import { PrismaClient } from '@prisma/client';
 import { Job } from '@/types';
 import amqp from 'amqplib';
+import { config } from '../../config/env.config';
 
 const prisma = new PrismaClient();
 
 // RabbitMQ connection and queue setup
-const RABBITMQ_URL = process.env.RABBITMQ_URL || 'amqp://localhost';
+const RABBITMQ_URL = config.messageQueue.rabbitmq.url;
 const JOB_QUEUE = 'webhook-jobs';
 
 let channel: amqp.Channel | null = null;

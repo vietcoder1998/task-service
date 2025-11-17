@@ -7,16 +7,16 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist",
-    "rootDir": ".",
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["*"],
+      "@shared/*": ["../shared/src/*"],
+      "@/*": ["src/*"],
       "@/controllers/*": ["src/v1/controllers/*"],
       "@/middlewares/*": ["src/v1/middlewares/*"],
       "@/services/*": ["src/v1/services/*"],
-      "@/utils/*": ["./src/utils/*"]
+      "@/utils/*": ["src/utils/*"]
     }
   },
-  "include": ["src/**/*.ts", "prisma/*.ts"],
+  "include": ["src/**/*.ts", "prisma/*.ts", "../shared/src/**/*.ts"],
   "exclude": ["node_modules", "**/*.spec.ts", "prisma/migrations/*"]
 }

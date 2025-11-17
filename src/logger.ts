@@ -1,6 +1,7 @@
 // src/logger.ts
 import { createLogger, format, transports } from 'winston';
 import path from 'path';
+import { config } from './config/env.config';
 
 // Custom format to add end_log and file info
 const customFormat = format.printf(({ timestamp, level, message, ...meta }) => {
@@ -20,7 +21,7 @@ const customFormat = format.printf(({ timestamp, level, message, ...meta }) => {
 });
 
 const logger = createLogger({
-  level: process.env.LOG_LEVEL || 'info',
+  level: config.logging.level,
   format: format.combine(format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), customFormat),
   defaultMeta: { service: 'api-service' },
   transports: [

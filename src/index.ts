@@ -8,6 +8,7 @@ import express, { Request, Response } from 'express';
 import { createServer } from 'http';
 import { setupSocket } from './socket';
 import { taskServiceApp } from './v1/index';
+import { config } from './config/env.config';
 
 const app = express();
 
@@ -45,7 +46,7 @@ app.get('/', (req: Request, res: Response) => {
   res.status(200).json({ message: 'server is running' });
 });
 
-const PORT = process.env.PORT || 4000;
+const PORT = config.server.port;
 httpServer.listen(PORT, () => {
   logger.info(`API server running on http://localhost:${PORT}`);
 });

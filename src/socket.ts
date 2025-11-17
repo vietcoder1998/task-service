@@ -1,7 +1,7 @@
 import { Server as HttpServer } from 'http';
 import { Server as SocketIOServer, Socket } from 'socket.io';
 import amqp from 'amqplib';
-import { RABBITMQ_URL, QUEUE_NAME, SOCKET_EVENT } from './env';
+import { config, SOCKET_EVENT } from './config/env.config';
 import logger from './logger';
 let io: SocketIOServer | null = null;
 
@@ -49,13 +49,15 @@ export function setupSocket(server: HttpServer) {
   // Start RabbitMQ consumers for notification and todo events
   (async () => {
     try {
-      const conn = await amqp.connect(RABBITMQ_URL);
+      const conn = await amqp.connect(config.messageQueue.rabbitmq.url);
       const channel = await conn.createChannel();
-      await channel.assertQueue(QUEUE_NAME.Notification, { durable: false });
-      await channel.assertQueue(QUEUE_NAME.Todo, { durable: false });
+      await channel.assertQueue(config.messageQueue.rabbitmq.queues.notification, {
+        durable: false,
+      });
+      await channel.assertQueue(config.messageQueue.rabbitmq.queues.todo, { durable: false });
 
       // Notification events
-      channel.consume(QUEUE_NAME.Notification, (msg) => {
+      channel.consume(config.messageQueue.rabbitmq.queues.notification, (msg) => {
         if (msg !== null) {
           try {
             const event: any = JSON.parse(msg.content.toString());
@@ -72,7 +74,7 @@ export function setupSocket(server: HttpServer) {
       });
 
       // Todo events
-      channel.consume(QUEUE_NAME.Todo, (msg) => {
+      channel.consume(config.messageQueue.rabbitmq.queues.todo, (msg) => {
         if (msg !== null) {
           try {
             const event: any = JSON.parse(msg.content.toString());
