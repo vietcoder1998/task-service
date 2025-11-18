@@ -42,6 +42,18 @@ setupSocket(httpServer);
 // Mount v1 API routes
 app.use('/api/v1', taskServiceApp.v1Router);
 
+// Health check endpoint
+app.get('/api/health', async (req: Request, res: Response) => {
+  const mysqlOk = await pingMySQL();
+  res.json({
+    status: 'ok',
+    service: 'task-service',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development',
+    database: mysqlOk ? 'connected' : 'disconnected',
+  });
+});
+
 app.get('/', (req: Request, res: Response) => {
   res.status(200).json({ message: 'server is running' });
 });
