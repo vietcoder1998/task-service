@@ -49,7 +49,7 @@ export const config = {
   },
 
   auth: {
-    jwtSecret: process.env.JWT_SECRET || sharedEnvConfig.COMPANY_SITE_JWT_TOKEN,
+    jwtSecret: process.env.JWT_SECRET || sharedEnvConfig.WEBSITE_ORIGIN_JWT_TOKEN,
   },
 
   logging: {
