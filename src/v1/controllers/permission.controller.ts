@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import logger from '../../logger';
+import { LoggerMiddleware } from '@shared/src/middleware/logger.middleware';
 import * as permissionService from '../services/permission.service';
 
 export const getPermissions = async (req: Request, res: Response) => {
@@ -9,10 +9,10 @@ export const getPermissions = async (req: Request, res: Response) => {
     const pageSize = req.query.pageSize ? Number(req.query.pageSize) : 50;
     const q = typeof req.query.q === 'string' ? req.query.q : '';
     const permissions = await permissionService.getPermissions(projectId, pageIndex, pageSize, q);
-    logger.info('Fetched permissions', projectId);
+    LoggerMiddleware.info('Fetched permissions', projectId);
     res.json(permissions);
   } catch (e: any) {
-    logger.error('Failed to fetch permissions: %s', e?.message || e);
+    LoggerMiddleware.error('Failed to fetch permissions: %s', e?.message || e);
     res
       .status(500)
       .json({ error: 'Failed to fetch permissions', details: e?.message || String(e) });
@@ -22,10 +22,10 @@ export const getPermissions = async (req: Request, res: Response) => {
 export const createPermission = async (req: Request, res: Response) => {
   try {
     const permission = await permissionService.createPermission(req.body);
-    logger.info('Created permission: %o', permission);
+    LoggerMiddleware.info('Created permission: %o', permission);
     res.status(201).json(permission);
   } catch (e: any) {
-    logger.error('Permission creation failed: %s', e?.message || e);
+    LoggerMiddleware.error('Permission creation failed: %s', e?.message || e);
     res.status(400).json({ error: 'Permission creation failed', details: e?.message || String(e) });
   }
 };
@@ -34,12 +34,12 @@ export const updatePermission = async (req: Request, res: Response) => {
   try {
     const permission = await permissionService.updatePermission(req.params.id, req.body);
     if (permission) {
-      logger.info('Updated permission: %o', permission);
+      LoggerMiddleware.info('Updated permission: %o', permission);
       return res.json(permission);
     }
     res.status(404).json({ error: 'Not found' });
   } catch (e: any) {
-    logger.error('Permission update failed: %s', e?.message || e);
+    LoggerMiddleware.error('Permission update failed: %s', e?.message || e);
     res.status(400).json({ error: 'Permission update failed', details: e?.message || String(e) });
   }
 };
@@ -48,12 +48,12 @@ export const deletePermission = async (req: Request, res: Response) => {
   try {
     const ok = await permissionService.deletePermission(req.params.id);
     if (ok) {
-      logger.info('Deleted permission: %s', req.params.id);
+      LoggerMiddleware.info('Deleted permission: %s', req.params.id);
       return res.status(204).end();
     }
     res.status(404).json({ error: 'Not found' });
   } catch (e: any) {
-    logger.error('Permission deletion failed: %s', e?.message || e);
+    LoggerMiddleware.error('Permission deletion failed: %s', e?.message || e);
     res.status(400).json({ error: 'Permission deletion failed', details: e?.message || String(e) });
   }
 };

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import logger from '../../logger';
+import { LoggerMiddleware } from '@shared/src/middleware/logger.middleware';
 import * as projectService from '../services/project.service';
 import * as todoService from '../services/todo.service';
 import { Todo } from '../../types/index';
@@ -8,7 +8,7 @@ export const getTodos = async (req: Request, res: Response) => {
   try {
     const { projectId } = req.query;
     const todos = await todoService.getTodos(typeof projectId === 'string' ? projectId : undefined);
-    logger.info('Fetched todos');
+    LoggerMiddleware.info('Fetched todos');
     res.json(todos);
   } catch (e: any) {
     res.status(500).json({ error: 'Failed to fetch todos', details: e?.message || String(e) });
@@ -22,7 +22,7 @@ export const getTodoByProjectId = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Missing projectId parameter' });
     }
     const todos = await todoService.getTodos(projectId);
-    logger.info('Fetched todos for projectId %s', projectId);
+    LoggerMiddleware.info('Fetched todos for projectId %s', projectId);
     res.json(todos);
   } catch (e: any) {
     res.status(500).json({ error: 'Failed to fetch todos', details: e?.message || String(e) });
@@ -83,7 +83,7 @@ export const createTodo = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Project not found for given projectId' });
     }
     const created = await todoService.createTodo(todo);
-    logger.info('Created todo: %o', created);
+    LoggerMiddleware.info('Created todo: %o', created);
     res.status(201).json(created);
   } catch (e: any) {
     res.status(400).json({ error: 'Todo creation failed', details: e?.message || String(e) });
@@ -103,7 +103,7 @@ export const deleteTodo = async (req: Request, res: Response) => {
   try {
     const ok = await todoService.deleteTodo(req.params.id);
     if (ok) {
-      logger.info('Deleted todo: %s', req.params.id);
+      LoggerMiddleware.info('Deleted todo: %s', req.params.id);
       return res.status(204).end();
     }
     res.status(404).json({ error: 'Not found' });
@@ -116,12 +116,12 @@ export const getTodoDetail = async (req: Request, res: Response) => {
   try {
     const todo = await todoService.getTodoDetail(req.params.id);
     if (todo) {
-      logger.info('Fetched todo detail: %o', todo);
+      LoggerMiddleware.info('Fetched todo detail: %o', todo);
       return res.json(todo);
     }
     res.status(404).json({ error: 'Todo not found' });
   } catch (e: any) {
-    logger.error('Failed to fetch todo detail: %s', e?.message || e);
+    LoggerMiddleware.error('Failed to fetch todo detail: %s', e?.message || e);
     res
       .status(500)
       .json({ error: 'Failed to fetch todo detail', details: e?.message || String(e) });
@@ -135,7 +135,7 @@ export const swapTodoPosition = async (req: Request, res: Response) => {
     await todoService.swapTodoPosition(id1, id2);
     res.status(200).json({ success: true });
   } catch (e: any) {
-    logger.error('Swap todo position failed: %s', e?.message || e);
+    LoggerMiddleware.error('Swap todo position failed: %s', e?.message || e);
     res.status(400).json({ error: 'Swap todo position failed', details: e?.message || String(e) });
   }
 };

@@ -1,4 +1,4 @@
-import logger from '../../logger';
+import { LoggerMiddleware } from '@shared/src/middleware/logger.middleware';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -56,7 +56,7 @@ export async function createAsset(name: string, typeName: string, projectId?: st
     }
     return asset.id;
   } catch (e) {
-    console.error('Failed to create asset or permissions:', e);
+    LoggerMiddleware.error('Failed to create asset or permissions', { error: e });
     return null;
   }
 }

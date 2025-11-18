@@ -1,4 +1,4 @@
-// src/logger.ts
+// src/LoggerMiddleware.ts
 import { createLogger, format, transports } from 'winston';
 import path from 'path';
 import { config } from './config/env.config';

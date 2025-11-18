@@ -1,6 +1,6 @@
 import type { Todo } from '@/types';
 import { PrismaClient } from '@prisma/client';
-import logger from '../../logger';
+import { LoggerMiddleware } from '@shared/src/middleware/logger.middleware';
 import { publishTodoEvent } from '../../queue';
 
 const prisma = new PrismaClient();
@@ -171,7 +171,7 @@ export const updateTodo = async (id: string, updates: Partial<Todo>): Promise<To
   try {
     // Build update data, only include defined fields
     const updateData: any = {};
-    logger.debug('Updating todo %s with data: %o', id, updates);
+    LoggerMiddleware.debug('Updating todo', { id, updates });
     for (const key in updates) {
       const value = (updates as any)[key];
       if (value !== undefined) {
@@ -188,7 +188,7 @@ export const updateTodo = async (id: string, updates: Partial<Todo>): Promise<To
 
     return fromPrismaTodo(updated);
   } catch (err) {
-    logger.error('Failed to update todo: %s', err);
+    LoggerMiddleware.error('Failed to update todo', { error: err });
     return null;
   }
 };
@@ -198,12 +198,12 @@ export const deleteTodo = async (id: string): Promise<boolean> => {
     await prisma.todo.delete({ where: { id } });
     return true;
   } catch (err) {
-    logger.error(
-      'Failed to delete todo: %s',
-      typeof err === 'object' && err !== null && 'message' in err
-        ? (err as any).message
-        : JSON.stringify(err),
-    );
+    LoggerMiddleware.error('Failed to delete todo', {
+      error:
+        typeof err === 'object' && err !== null && 'message' in err
+          ? (err as any).message
+          : JSON.stringify(err),
+    });
     return false;
   }
 };

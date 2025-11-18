@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { Job } from '@/types';
 import amqp from 'amqplib';
 import { config } from '../../config/env.config';
+import { LoggerMiddleware } from '@shared/src/middleware/logger.middleware';
 
 const prisma = new PrismaClient();
 
@@ -39,7 +40,7 @@ async function startJobConsumer() {
       const job: Job = JSON.parse(msg.content.toString());
       // Here you would call the webhook or perform the scheduled task
       // Example: await callWebhook(job.webhookId, job.schedule);
-      console.log('Processing job:', job);
+      LoggerMiddleware.info('Processing job', { job });
       ch.ack(msg);
     }
   });

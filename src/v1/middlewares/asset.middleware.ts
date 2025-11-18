@@ -1,7 +1,6 @@
 import { PrismaClient } from '@prisma/client';
+import { LoggerMiddleware } from '@shared/src/middleware/logger.middleware';
 import { NextFunction, Request, Response } from 'express';
-import logger from '../../logger';
-import { History, Project } from '@/types';
 import { createAsset } from '../services/asset.util';
 import * as permissionService from '../services/permission.service';
 
@@ -24,7 +23,10 @@ export async function attachAssetOnCreate(req: Request, res: Response, next: Nex
         const adminUser = await prisma.user.findFirst({ where: { name: 'Admin', projectId } });
         const finalOwnerId = adminUser ? adminUser.id : 'admin';
         const actions = ['edit', 'view', 'comment', 'delete'];
-        logger.debug('Ensuring permissions for asset %s and user %s', assetId, finalOwnerId);
+        LoggerMiddleware.debug('Ensuring permissions for asset', {
+          assetId,
+          finalOwnerId,
+        });
         const permissionData = actions.map((type) => ({
           id: `${type}:asset:${assetId}:${finalOwnerId}`,
           type,
@@ -36,7 +38,7 @@ export async function attachAssetOnCreate(req: Request, res: Response, next: Nex
         }));
         // Use permissionService to create permissions
         await permissionService.createManyPermissions(permissionData);
-        logger.info('Permission created for asset %s and user %s', assetId, finalOwnerId);
+        LoggerMiddleware.info('Permission created for asset', { assetId, finalOwnerId });
         // No direct return here, let controller/middleware handle response
       }
 
@@ -82,7 +84,7 @@ export async function addHistoryOnUpdate(req: Request, res: Response, next: Next
               projectId: projectId,
             },
           });
-          logger.info('Updated history entry created: %o', history);
+          LoggerMiddleware.info('Updated history entry created: %o', history);
           if (!res.headersSent) {
             res.setHeader('x-history-id', history.id);
           }

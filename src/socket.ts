@@ -2,7 +2,7 @@ import { Server as HttpServer } from 'http';
 import { Server as SocketIOServer, Socket } from 'socket.io';
 import amqp from 'amqplib';
 import { config, SOCKET_EVENT } from './config/env.config';
-import logger from './logger';
+import { LoggerMiddleware } from '@shared/src/middleware/logger.middleware';
 let io: SocketIOServer | null = null;
 
 export function broadcastProjectSync(projectId: string, payload: any = {}) {
@@ -28,11 +28,11 @@ export function setupSocket(server: HttpServer) {
   });
 
   io.on('connection', (socket: Socket) => {
-    logger.info('A user connected:', socket.id);
+    LoggerMiddleware.info('A user connected:', socket.id);
 
     socket.on('joinProject', (projectId: string) => {
       socket.join(`project:${projectId}`);
-      logger.info(`Socket ${socket.id} joined project:${projectId}`);
+      LoggerMiddleware.info(`Socket ${socket.id} joined project:${projectId}`);
       // Emit success event to the joining socket
       socket.emit(SOCKET_EVENT.ProjectJoinSuccess, { projectId });
     });
@@ -42,7 +42,7 @@ export function setupSocket(server: HttpServer) {
     });
 
     socket.on('disconnect', () => {
-      logger.info('User disconnected:', socket.id);
+      LoggerMiddleware.info('User disconnected:', socket.id);
     });
   });
 

@@ -1,7 +1,7 @@
 import { pingMySQL } from './prisma';
 import { backupAllDatabase } from './v1/jobs/backup';
 
-import { LoggerMiddleware } from '../../shared/src/middleware/logger.middleware';
+import { LoggerMiddleware } from '@shared/src/middleware/logger.middleware';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import express, { Request, Response } from 'express';

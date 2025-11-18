@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import logger from '../../logger';
+import { LoggerMiddleware } from '@shared/src/middleware/logger.middleware';
 import redisClient from '../../utils/redisClient';
 
 // Extend Express Request to allow meta property
@@ -55,10 +55,12 @@ export function boundaryResponse(req: Request, res: Response, next: NextFunction
         const keys = await redisClient.keys(pattern);
         if (keys.length > 0) {
           await redisClient.del(keys);
-          logger.info(`Cache invalidated for pattern ${pattern} (${keys.length} keys cleared)`);
+          LoggerMiddleware.info(
+            `Cache invalidated for pattern ${pattern} (${keys.length} keys cleared)`,
+          );
         }
       } catch (error) {
-        logger.error(`Failed to invalidate cache for pattern ${pattern}:`, error);
+        LoggerMiddleware.error(`Failed to invalidate cache for pattern ${pattern}`, { error });
       }
     });
   }
@@ -118,7 +120,7 @@ export function boundaryResponse(req: Request, res: Response, next: NextFunction
       const errorCode = body.errorCode || body.code || -1;
       const message = body.message || body.error || String(body);
       const details = body.details || undefined;
-      logger.error(
+      LoggerMiddleware.error(
         [
           'API Error:',
           `message: ${message}`,
@@ -139,7 +141,7 @@ export function boundaryResponse(req: Request, res: Response, next: NextFunction
     }
 
     if (typeof body === 'string') {
-      logger.info(
+      LoggerMiddleware.info(
         [
           'API Success:',
           `message: ${body}`,
@@ -160,7 +162,7 @@ export function boundaryResponse(req: Request, res: Response, next: NextFunction
     if (Array.isArray(body)) {
       const page = req.meta?.page ?? 1;
       const pageSize = req.meta?.pageSize ?? 10;
-      logger.info(
+      LoggerMiddleware.info(
         [
           'API Success:',
           `message: Success`,
@@ -184,7 +186,7 @@ export function boundaryResponse(req: Request, res: Response, next: NextFunction
     }
 
     // Default: wrap in { data, message }
-    logger.info(
+    LoggerMiddleware.info(
       [
         'API Success:',
         `message: Success`,
@@ -204,13 +206,13 @@ export function boundaryResponse(req: Request, res: Response, next: NextFunction
   // For GET: try to serve from cache first
   if (req.method === 'GET') {
     const cacheKey = getCacheKey();
-    redisClient.get(cacheKey).then((cached) => {
+    redisClient.get(cacheKey).then((cached: string | null) => {
       if (cached) {
-        logger.info(`Cache hit for ${cacheKey}`);
+        LoggerMiddleware.info(`Cache hit for ${cacheKey}`);
         res.setHeader('X-Cache', 'HIT');
         return res.json(JSON.parse(cached));
       } else {
-        logger.info(`Cache miss for ${cacheKey}`);
+        LoggerMiddleware.info(`Cache miss for ${cacheKey}`);
         next();
       }
     });
