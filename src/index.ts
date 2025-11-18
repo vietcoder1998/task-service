@@ -12,7 +12,14 @@ import { config } from './config/env.config';
 
 const app = express();
 
-app.use(cors());
+// Always allow API Gateway
+const gatewayUrl = process.env.GATEWAY_URL || 'http://localhost:5000';
+app.use(
+  cors({
+    origin: [gatewayUrl, 'http://localhost:3000', 'http://localhost:5173'],
+    credentials: true,
+  }),
+);
 app.use(bodyParser.json());
 
 // MySQL ping endpoint
