@@ -1,7 +1,7 @@
 import { pingMySQL } from './prisma';
 import { backupAllDatabase } from './v1/jobs/backup';
 
-import logger from './logger';
+import { LoggerMiddleware } from '../../shared/src/middleware/logger.middleware';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import express, { Request, Response } from 'express';
@@ -9,6 +9,9 @@ import { createServer } from 'http';
 import { setupSocket } from './socket';
 import { taskServiceApp } from './v1/index';
 import { config } from './config/env.config';
+
+// Set service name for logger
+LoggerMiddleware.setServiceName('task-service');
 
 const app = express();
 
@@ -38,7 +41,7 @@ app.post('/api/backup', async (req: Request, res: Response) => {
     const results = await backupAllDatabase();
     res.status(200).json({ status: 'ok', files: results });
   } catch (err) {
-    logger.error('Backup failed', { err });
+    LoggerMiddleware.error('Backup failed', { err });
     res.status(500).json({ status: 'error', message: 'Backup failed', details: err });
   }
 });
@@ -67,5 +70,5 @@ app.get('/', (req: Request, res: Response) => {
 
 const PORT = config.server.port;
 httpServer.listen(PORT, () => {
-  logger.info(`API server running on http://localhost:${PORT}`);
+  LoggerMiddleware.info(`API server running on http://localhost:${PORT}`);
 });
